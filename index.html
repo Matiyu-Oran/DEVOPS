@@ -1,15 +1,157 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>Test Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PC Cafe Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f6;--card:#fff;--tx:#14213d;--mut:#586377;--bd:#d5dce8;--vac:#157a4b;--vacbg:#dff4e8;--occ:#1d4ed8;--occbg:#e1eaff;--out:#b42318;--outbg:#fbe4e1;--warn:#a85a00;--warnbg:#ffe9c7;--ov:rgba(10,20,40,.55);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--card:#16213a;--tx:#e8edf7;--mut:#9aa7bf;--bd:#2a3957;--vac:#4fd69a;--vacbg:#123a2b;--occ:#8fb0ff;--occbg:#182b5c;--out:#ff8c80;--outbg:#4a1c1a;--warn:#ffc266;--warnbg:#4d3510}}
+:root[data-theme="dark"]{--bg:#0d1526;--card:#16213a;--tx:#e8edf7;--mut:#9aa7bf;--bd:#2a3957;--vac:#4fd69a;--vacbg:#123a2b;--occ:#8fb0ff;--occbg:#182b5c;--out:#ff8c80;--outbg:#4a1c1a;--warn:#ffc266;--warnbg:#4d3510}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.4 "Barlow",system-ui,sans-serif;padding:20px 16px 40px;max-width:1100px;margin-inline:auto}
+h1{font:700 2rem "Barlow Condensed",sans-serif;letter-spacing:.01em}
+.top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end;justify-content:space-between;margin-bottom:18px}
+.set{display:flex;gap:14px;flex-wrap:wrap}
+.set{align-items:end}
+.set label{display:flex;flex-direction:column;font-size:.8rem;color:var(--mut);gap:3px}
+.addpc{padding:9px 14px;border-radius:6px;border:0;background:var(--occ);color:var(--card);font:700 1rem "Barlow",sans-serif;cursor:pointer}
+.addpc.ghost{background:none;border:1px solid var(--bd);color:var(--tx)}
+.addpc:disabled{opacity:.45;cursor:not-allowed}
+input[type=number]{width:96px;padding:8px 10px;font:600 1rem "Barlow",sans-serif;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:6px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px 14px}
+.stat b{display:block;font:700 1.7rem "Barlow Condensed",sans-serif}
+.stat span{font-size:.85rem;color:var(--mut)}
+.stat.sales{border-color:var(--occ)}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pc{display:flex;flex-direction:column;gap:2px;text-align:left;min-height:104px;padding:12px 14px;border-radius:10px;border:2px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer;font-family:inherit}
+.pc b{font:700 1.1rem "Barlow Condensed",sans-serif}
+.pc .l{font-weight:600;font-size:1.25rem}
+.pc .s{font-size:.9rem;color:var(--mut)}
+.pc.vacant{background:var(--vacbg);border-color:var(--vac)}.pc.vacant .l{color:var(--vac)}
+.pc.occupied{background:var(--occbg);border-color:var(--occ)}.pc.occupied .l{color:var(--occ);font-variant-numeric:tabular-nums}
+.pc.out{background:var(--outbg);border-color:var(--out);border-style:dashed}.pc.out .l{color:var(--out);font-size:1.05rem}
+.pc.over{background:var(--warnbg);border-color:var(--warn);animation:pulse 1.2s ease-in-out infinite}.pc.over .l{color:var(--warn)}
+@keyframes pulse{50%{box-shadow:0 0 0 4px var(--warnbg)}}
+@media (prefers-reduced-motion:reduce){.pc.over{animation:none}}
+:focus-visible{outline:3px solid var(--occ);outline-offset:2px}
+#ov{position:fixed;inset:0;z-index:10;background:var(--ov);display:flex;align-items:center;justify-content:center;padding:16px}
+#ov[hidden]{display:none}
+#m{background:var(--card);border:1px solid var(--bd);border-radius:12px;width:100%;max-width:420px;max-height:92vh;overflow:auto;padding:20px}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mh h2{font:700 1.6rem "Barlow Condensed",sans-serif}
+.x{background:none;border:0;color:var(--mut);font-size:1.6rem;cursor:pointer;padding:2px 8px}
+.segs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+.seg{padding:10px 4px;border-radius:8px;border:2px solid var(--bd);background:none;color:var(--tx);font:600 .95rem "Barlow",sans-serif;cursor:pointer}
+.seg.on.vacant{background:var(--vacbg);border-color:var(--vac);color:var(--vac)}
+.seg.on.occupied{background:var(--occbg);border-color:var(--occ);color:var(--occ)}
+.seg.on.out{background:var(--outbg);border-color:var(--out);color:var(--out)}
+.mut{color:var(--mut);font-size:.9rem;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--bd);background:none;color:var(--tx);font:600 .95rem "Barlow",sans-serif;cursor:pointer}
+.chip.on{background:var(--occ);border-color:var(--occ);color:var(--card)}
+.step{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.step button{width:42px;height:42px;border-radius:8px;border:1px solid var(--bd);background:none;color:var(--tx);font-size:1.4rem;cursor:pointer}
+.step input{width:90px;text-align:center}
+.price{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--bd);padding-top:12px;margin-bottom:14px}
+.price b{font:700 2.2rem "Barlow Condensed",sans-serif;color:var(--occ)}
+.go{width:100%;padding:13px;border-radius:8px;border:0;background:var(--occ);color:var(--card);font:700 1.05rem "Barlow",sans-serif;cursor:pointer}
+.go.alt{background:none;border:2px solid var(--bd);color:var(--tx);margin-top:8px}
+.go.red{background:var(--out)}
+.go.grn{background:var(--vac)}
+.big{font:700 3rem "Barlow Condensed",sans-serif;color:var(--occ);font-variant-numeric:tabular-nums}
+.big.over{color:var(--warn)}
+</style>
 </head>
-
 <body>
+<div class="top">
+  <h1>PC Cafe Board</h1>
+  <div class="set">
+    <label>Rate (₱ per 30 min)<input type="number" id="rate" min="1"></label>
+    <label>Number of PCs<input type="number" id="count" min="1" max="60"></label>
+    <button class="addpc" id="add">+ Add PC</button>
+    <button class="addpc ghost" id="rm" title="Removes the last PC when it is vacant">− Remove last PC</button>
+  </div>
+</div>
+<div class="stats" id="stats"></div>
+<div id="grid"></div>
+<div id="ov" hidden><div id="m" role="dialog" aria-modal="true"></div></div>
 
-<h1>This is a Heading</h1>
-<p>This is a paragraph.</p>
+<script>
+const $=s=>document.querySelector(s),KEY='pccafe.v1',p2=n=>String(n).padStart(2,'0');
+let S={rate:50,count:12,pcs:[],log:[]},sel=null,tab='',draft=30;
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const fit=()=>{while(S.pcs.length<S.count)S.pcs.push({st:'vacant'});S.pcs.length=S.count};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cost=m=>Math.ceil(m/30)*S.rate;
+const clock=ms=>{const s=Math.floor(Math.abs(ms)/1000),h=Math.floor(s/3600);return(h?h+':':'')+p2(Math.floor(s%3600/60))+':'+p2(s%60)};
+const dur=m=>{const h=Math.floor(m/60),r=m%60;return(h?h+' hr ':'')+(r?r+' min':'')||'0 min'};
 
+function upd(){
+  const g=$('#grid');
+  if(g.children.length!==S.pcs.length)g.innerHTML=S.pcs.map((_,i)=>`<button class="pc" data-i="${i}"><b>PC ${p2(i+1)}</b><span class="l"></span><span class="s"></span></button>`).join('');
+  const now=Date.now(),t={vacant:0,occupied:0,out:0};
+  S.pcs.forEach((p,i)=>{
+    t[p.st]++;let c=p.st,l='Vacant',s='';
+    if(p.st==='occupied'){const rem=p.start+p.min*60000-now;
+      if(rem<=0){c='over';l="Time's up";s='Over by '+clock(rem)}else{l=clock(rem);s='₱'+p.cost+' · '+dur(p.min)}}
+    else if(p.st==='out')l='Out of order';
+    const el=g.children[i];el.className='pc '+c;el.children[1].textContent=l;el.children[2].textContent=s;
+  });
+  $('#add').disabled=S.count>=60;$('#rm').disabled=S.count<=1||S.pcs[S.count-1].st!=='vacant';
+  const d=new Date();d.setHours(0,0,0,0);
+  const sales=S.log.filter(x=>x.ts>=d.getTime()).reduce((a,x)=>a+x.cost,0);
+  $('#stats').innerHTML=`<div class="stat"><b>${t.vacant}</b><span>Vacant</span></div><div class="stat"><b>${t.occupied}</b><span>Occupied</span></div><div class="stat"><b>${t.out}</b><span>Out of order</span></div><div class="stat sales"><b>₱${sales}</b><span>Sales today</span></div>`;
+  const r=$('#rem');if(r&&sel!==null){const p=S.pcs[sel];if(p.st==='occupied'){const ms=p.start+p.min*60000-now;r.textContent=(ms<0?'+':'')+clock(ms);r.className='big'+(ms<0?' over':'')}}
+}
+
+function modal(){
+  const p=S.pcs[sel],occ=p.st==='occupied';
+  const segs=[['vacant','Vacant'],['occupied','Occupied'],['out','Out of order']].map(([k,t])=>`<button class="seg ${tab===k?'on '+k:''}" data-tab="${k}">${t}</button>`).join('');
+  let b='';
+  if(tab==='vacant')b=`<p class="mut">${occ?'This ends the current session.':'Mark this PC as free for the next customer.'}</p><button class="go grn" data-act="vacant">${occ?'End session and set vacant':'Set vacant'}</button>`;
+  else if(tab==='out')b=`<p class="mut">${occ?'This ends the current session. ':''}The PC will be skipped until you set it back to vacant.</p><button class="go red" data-act="out">Mark out of order</button>`;
+  else if(occ)b=`<div class="mut">Time left</div><div id="rem" class="big"></div><div class="price"><span>${dur(p.min)} paid</span><b>₱${p.cost}</b></div><button class="go" data-act="ext">Add 30 min (₱${S.rate})</button><button class="go alt" data-act="vacant">End session</button>`;
+  else b=`<p class="mut">How long will they stay? Billed ₱${S.rate} per 30 minutes, rounded up.</p>
+    <div class="chips">${[30,60,90,120,180].map(m=>`<button class="chip ${draft===m?'on':''}" data-min="${m}">${dur(m)}</button>`).join('')}</div>
+    <div class="step"><button data-d="-30" aria-label="Minus 30 minutes">−</button><input type="number" id="dm" min="1" value="${draft}" aria-label="Minutes"><span>minutes</span><button data-d="30" aria-label="Plus 30 minutes">+</button></div>
+    <div class="price"><span id="blk"></span><b id="pr"></b></div><button class="go" data-act="start">Start session</button>`;
+  $('#m').innerHTML=`<div class="mh"><h2>PC ${p2(sel+1)}</h2><button class="x" data-act="close" aria-label="Close">×</button></div><div class="segs">${segs}</div>${b}`;
+  price();upd();
+}
+function price(){const a=$('#pr');if(a){a.textContent='₱'+cost(draft);$('#blk').textContent=Math.ceil(draft/30)+' × 30-min block'+(Math.ceil(draft/30)>1?'s':'')}}
+function close(){sel=null;$('#ov').hidden=true}
+function clear(p){delete p.start;delete p.min;delete p.cost}
+
+$('#grid').addEventListener('click',e=>{const b=e.target.closest('.pc');if(!b)return;sel=+b.dataset.i;tab=S.pcs[sel].st;draft=30;$('#ov').hidden=false;modal()});
+$('#ov').addEventListener('click',e=>{
+  if(e.target.id==='ov')return close();
+  const t=e.target.closest('button');if(!t||sel===null)return;const p=S.pcs[sel];
+  if(t.dataset.tab){tab=t.dataset.tab;return modal()}
+  if(t.dataset.min){draft=+t.dataset.min;return modal()}
+  if(t.dataset.d){draft=Math.max(1,draft+ +t.dataset.d);return modal()}
+  const a=t.dataset.act;
+  if(a==='close')return close();
+  if(a==='vacant'||a==='out'){clear(p);p.st=a}
+  if(a==='start'){p.st='occupied';p.start=Date.now();p.min=draft;p.cost=cost(draft);S.log.push({pc:sel+1,min:draft,cost:p.cost,ts:Date.now()})}
+  if(a==='ext'){p.min+=30;p.cost+=S.rate;S.log.push({pc:sel+1,min:30,cost:S.rate,ts:Date.now()});save();return modal()}
+  save();close();upd();
+});
+$('#ov').addEventListener('input',e=>{if(e.target.id==='dm'){draft=Math.max(1,Math.round(+e.target.value)||1);price()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sel!==null)close()});
+$('#rate').addEventListener('change',e=>{S.rate=Math.max(1,+e.target.value||50);e.target.value=S.rate;save();upd()});
+$('#count').addEventListener('change',e=>{S.count=Math.min(60,Math.max(1,Math.round(+e.target.value)||12));e.target.value=S.count;fit();save();upd()});
+
+const setCount=n=>{S.count=n;$('#count').value=n;fit();save();upd()};
+$('#add').addEventListener('click',()=>{if(S.count<60)setCount(S.count+1)});
+$('#rm').addEventListener('click',()=>{if(S.count>1&&S.pcs[S.count-1].st==='vacant')setCount(S.count-1)});
+
+fit();$('#rate').value=S.rate;$('#count').value=S.count;upd();setInterval(upd,1000);
+</script>
 </body>
-
 </html>
